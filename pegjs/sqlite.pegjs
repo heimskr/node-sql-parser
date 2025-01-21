@@ -409,7 +409,7 @@ column_order
       order_by: o && o.toLowerCase(),
     }
   }
-  
+
 create_index_stmt
   = a:KW_CREATE __
   kw:(KW_UNIQUE)? __
@@ -436,7 +436,7 @@ create_index_stmt
         }
     }
   }
-  
+
 view_with
   = KW_WITH __ c:("CASCADED"i / "LOCAL"i) __ "CHECK"i __ "OPTION" {
     return `with ${c.toLowerCase()} check option`
@@ -2765,7 +2765,7 @@ KW_CAST     = "CAST"i       !ident_start { return 'CAST' }
 
 KW_BIT      = "BIT"i      !ident_start { return 'BIT'; }
 KW_CHAR     = "CHAR"i     !ident_start { return 'CHAR'; }
-KW_VARCHAR  = "VARCHAR"i  !ident_start { return 'VARCHAR';}
+KW_VARCHAR  = "VARCHAR"i  !ident_start { return 'VARCHAR'; }
 KW_NUMERIC  = "NUMERIC"i  !ident_start { return 'NUMERIC'; }
 KW_DECIMAL  = "DECIMAL"i  !ident_start { return 'DECIMAL'; }
 KW_SIGNED   = "SIGNED"i   !ident_start { return 'SIGNED'; }
@@ -2778,6 +2778,7 @@ KW_SMALLINT = "SMALLINT"i !ident_start { return 'SMALLINT'; }
 KW_TINYINT  = "TINYINT"i  !ident_start { return 'TINYINT'; }
 KW_TINYTEXT = "TINYTEXT"i !ident_start { return 'TINYTEXT'; }
 KW_TEXT     = "TEXT"i     !ident_start { return 'TEXT'; }
+KW_VARBINARY  = "VARBINARY"i   !ident_start { return 'VARBINARY'; }
 KW_MEDIUMTEXT = "MEDIUMTEXT"i  !ident_start { return 'MEDIUMTEXT'; }
 KW_LONGTEXT  = "LONGTEXT"i  !ident_start { return 'LONGTEXT'; }
 KW_BIGINT   = "BIGINT"i   !ident_start { return 'BIGINT'; }
@@ -3085,11 +3086,12 @@ boolean_type
   = 'boolean'i { return { dataType: 'BOOLEAN' }; }
 
 character_string_type
-  = t:(KW_CHAR / KW_VARCHAR) __ LPAREN __ l:[0-9]+ __ RPAREN {
+  = t:(KW_CHAR / KW_VARCHAR / KW_VARBINARY) __ LPAREN __ l:[0-9]+ __ RPAREN {
     return { dataType: t, length: parseInt(l.join(''), 10), parentheses: true };
   }
   / t:KW_CHAR { return { dataType: t }; }
   / t:KW_VARCHAR { return { dataType: t }; }
+  / t:KW_VARBINARY { return { dataType: t }; }
 
 numeric_type_suffix
   = un: KW_UNSIGNED? __ ze: KW_ZEROFILL? {

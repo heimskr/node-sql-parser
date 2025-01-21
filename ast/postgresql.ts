@@ -349,7 +349,15 @@ export interface drop_index_stmt_node {
         options?: 'cascade' | 'restrict';
       }
 
-export type drop_stmt = AstStatement<drop_stmt_node> | AstStatement<drop_index_stmt_node>;
+export interface drop_view_stmt_node {
+        type: 'drop';
+        prefix?: string;
+        keyword: 'view';
+        name: table_ref_list;
+        options?: view_options;
+      }
+
+export type drop_stmt = AstStatement<drop_stmt_node> | AstStatement<drop_index_stmt_node> | AstStatement<drop_view_stmt_node>;
 
 export type truncate_table_name = table_name & { suffix?: string };
 
@@ -608,6 +616,8 @@ export type reference_definition = {
     };
 
 export type on_reference = { type: 'on delete' | 'on update'; value: reference_option; };
+
+export type view_options = 'restrict' | 'cascade';;
 
 export type reference_option = { type: 'function'; name: string; args: expr_list; } | 'restrict' | 'cascade' | 'set null' | 'no action' | 'set default' | 'current_timestamp';
 
